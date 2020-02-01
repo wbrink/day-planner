@@ -5,33 +5,42 @@
 
 html,
 body {
-  font-size: 16px;
+  font-size: 18px;
+  color: black;
+  background-color: rgb(187, 194, 209);
+  /* background-color: rgb(41, 166, 197); */
+  font-family: "Montserrat", sans-serif;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.5rem;
 }
 
 h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
   letter-spacing: 7px;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
 }
 
 .lead {
+  text-align: center;
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
-}
-
-header {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  margin-top: 1.5rem;
+  font-family: "Nanum Myeongjo", serif;
 }
 
 .container {
   margin: auto;
-  width: 1300px;
+  width: 500px;
+  padding: 10px;
 
   /* fix margin collapsing within container */
-  padding: 10px;
   /* padding: 10px 30px 10px 30px; */
 }
 
@@ -39,27 +48,38 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 30px;
-  background-color: lightgreen;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 50px;
+  color: white;
+
+  background-color: rgb(41, 166, 197);
+  /* background-color: rgb(114, 117, 124); */
 }
 
-textarea {
-  /* lets the middle shrink and grow to remaining width */
-  flex: 1 1 auto;
-}
-
+/* div contenteditable */
 .event-text {
   /* lets the middle shrink and grow to remaining width */
+  padding: 5px 17px;
+  border-radius: 30px;
   flex: 1 1 auto;
-  background-color: lightcoral;
-  /* height has to be 2px bigger per row of text 
-  example 3 rows of 16px font = 18*3px font to allow 3 rows without resizing*/
-  min-height: 54px;
+  background-color: rgb(241, 231, 231);
+  color: black;
+
+  font-family: "Nanum Myeongjo", serif;
+  font-size: 1.2rem;
+  min-height: 20px;
+}
+
+.event-text:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(19, 19, 175, 0.5);
 }
 
 label {
   flex: 0 0 100px;
   text-align: center;
+  font-size: 1.1rem;
 }
 
 .save-container {
@@ -71,13 +91,21 @@ label {
 .save-button {
   cursor: pointer;
   width: 25px;
-  fill: blue;
+  fill: white;
 }
 
 .save-button:hover {
-  fill: red;
+  fill: rgb(201, 207, 211);
 }
 
 .save-button:active {
-  fill: pink;
+  fill: rgba(214, 214, 214, 0.774);
+}
+
+.row-present {
+  background-color: rgb(50, 194, 50);
+}
+
+.row-past {
+  background-color: rgb(145, 138, 136);
 }

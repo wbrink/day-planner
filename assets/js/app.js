@@ -1,27 +1,40 @@
 var plannerForm = $("#day-planner");
+var lead = $(".lead");
 
 var hourArray = [
-  "08:00AM",
-  "09:00AM",
+  "8:00AM",
+  "9:00AM",
   "10:00AM",
   "11:00AM",
   "12:00PM",
-  "01:00PM",
-  "02:00PM",
-  "03:00PM",
-  "04:00PM",
-  "05:00PM",
-  "06:00PM"
+  "1:00PM",
+  "2:00PM",
+  "3:00PM",
+  "4:00PM",
+  "5:00PM",
+  "6:00PM"
 ];
 
-//var m = moment("9:00AM", "h:mmA");
+var m = moment();
+m = m.subtract(10, "hours");
+var hour = m.hour();
 
 $(document).ready(function() {
+  var formattedDate = m.format("dddd, MMMM Do YYYY");
+  lead.text(formattedDate);
+  console.log(m.hour());
+
   for (var i = 0; i < hourArray.length; i++) {
     var row = $("<div>").addClass("row");
 
+    if (i + 8 < hour) {
+      row.addClass("row-past");
+    } else if (i + 8 == hour) {
+      row.addClass("row-present");
+    }
+    // set data-index to i+8 since moment.hour() returns 0-23 (12AM=0, 1am = 1... 12pm = 12etc)
     var label = $("<label>")
-      .attr({ "data-index": i, for: `event-${i}` })
+      .attr("data-index", i + 8)
       .text(hourArray[i]);
 
     // make editable div so the container is able to resize automattically if the user wants many rows
@@ -40,5 +53,3 @@ $(document).ready(function() {
     plannerForm.append(row);
   }
 });
-
-//console.log(m.toString());
