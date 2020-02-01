@@ -3,9 +3,11 @@
   padding: 0;
 }
 
-html,
+html {
+  font-size: 20px;
+}
+
 body {
-  font-size: 18px;
   color: black;
   background-color: rgb(187, 194, 209);
   /* background-color: rgb(41, 166, 197); */
@@ -37,18 +39,14 @@ h1 {
 
 .container {
   margin: auto;
-  width: 500px;
-  padding: 10px;
-
-  /* fix margin collapsing within container */
-  /* padding: 10px 30px 10px 30px; */
+  width: 97%;
 }
 
 .row {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 5px;
   margin-bottom: 20px;
   border-radius: 50px;
   color: white;
@@ -67,8 +65,10 @@ h1 {
   color: black;
 
   font-family: "Nanum Myeongjo", serif;
-  font-size: 1.2rem;
+  font-size: 1rem;
   min-height: 20px;
+
+  word-break: break-all;
 }
 
 .event-text:focus {
@@ -76,10 +76,11 @@ h1 {
   box-shadow: 0 0 0 3px rgba(19, 19, 175, 0.5);
 }
 
+/* hour label next to todo list */
 label {
-  flex: 0 0 100px;
+  flex: 0 0 120px;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .save-container {
@@ -108,4 +109,39 @@ label {
 
 .row-past {
   background-color: rgb(145, 138, 136);
+}
+
+/* smaller devices */
+@media (max-width: 850px) {
+  html {
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+
+  label {
+    flex: 0 0 85px;
+    text-align: center;
+  }
+
+  .save-container {
+    flex: 0 0 40px;
+  }
+
+  .save-button {
+    width: 15px;
+  }
+}
+
+/* bigger devices */
+@media (min-width: 1300px) {
+  .container {
+    width: 75%;
+  }
 }
