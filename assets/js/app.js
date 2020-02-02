@@ -16,8 +16,10 @@ var hourArray = [
 ];
 
 // momentjs getting current day and hour
-var m = moment();
-//m = m.subtract(5, "hours");
+var m = moment(); // get current date
+
+var editableMoment = moment(); // copy that can be edited
+
 var hour = m.hour();
 
 // grab localstorage
@@ -27,12 +29,16 @@ if (!todos) {
   todos = {};
 }
 
+// global variable for selected Calendar Day
+var selCaledarDay;
+
 //console.log(todos);
 
 var commitments = $(document).ready(function() {
   var formattedDate = m.format("dddd, MMMM Do YYYY");
   lead.text(formattedDate);
   //console.log(m.hour());
+  setupCalendar(m, true); // pass in datetime
 
   for (var i = 0; i < hourArray.length; i++) {
     var row = $("<div>").addClass("row");
@@ -68,8 +74,9 @@ var commitments = $(document).ready(function() {
   }
 });
 
-// event handler that targets all .save-button elements even if dynamically created
-$(document).on("click", ".save-button", saveToDo);
+//event handlers
+$(document).on("click", ".save-button", saveToDo); // targets all .save-button elements even if dynamically created
+$(".change-month").on("click", changeMonthClick); // targets change month clicks on calendar
 
 function saveToDo(event) {
   var hour = $(this).attr("data-index");
@@ -79,7 +86,49 @@ function saveToDo(event) {
   localStorage.setItem("todos", JSON.stringify(todos));
 }
 
-// function dates(m) {
-//   var days = m.days.InMonth();
-//   console.log(days);
-// }
+// setsup the calendar on load
+// fromOnReady is boolean that tells whether function is called from document.onready function
+function setupCalendar(momentObject, fromOnReady) {
+  clearCalendar();
+  // set the month and year for calendar
+  $(".month-year").text(momentObject.format("MMMM YYYY"));
+  var currentDay = momentObject.format("D");
+  var daysInMonth = momentObject.daysInMonth();
+  var startDayIndex = momentObject.startOf("month").format("d"); // gives the index of day su=0m monday=1...sat=6
+  startDayIndex = parseInt(startDayIndex);
+
+  //console.log("currentday: " + currentDay);
+  // place days of week in correct position on calendar
+  for (var i = 1; i <= daysInMonth; i++) {
+    $(`[data-day=${startDayIndex}]`).text(i);
+
+    // if not from on ready then day will not be highlighed since it was
+    // called from function dealing with prev and next month clicks
+    if (i === parseInt(currentDay) && fromOnReady) {
+      selCaledarDay = $(`[data-day=${startDayIndex}]`);
+      selCaledarDay.css("background-color", "rgb(41, 166, 197)");
+    }
+    startDayIndex++;
+  }
+}
+
+function changeMonthClick() {
+  // remove selected day highlight
+  selCaledarDay.css("background-color", "white");
+
+  var action = $(this).attr("data-value");
+  if (action === "prev") {
+    // subtract 1 from current month
+    editableMoment = editableMoment.subtract(1, "months");
+    setupCalendar(editableMoment, false);
+  } else {
+    editableMoment = editableMoment.add(1, "months");
+    setupCalendar(editableMoment, false);
+  }
+}
+
+function clearCalendar() {
+  for (var i = 0; i < 35; i++) {
+    $(`[data-day=${i}]`).text("");
+  }
+}

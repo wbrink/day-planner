@@ -143,6 +143,10 @@ label {
   border: 1px solid black;
 }
 
+.change-month {
+  cursor: pointer;
+}
+
 /* .hide {
   display: none !important;
 } */
