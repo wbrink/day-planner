@@ -78,3 +78,8 @@ function saveToDo(event) {
   todos[hour] = todo;
   localStorage.setItem("todos", JSON.stringify(todos));
 }
+
+// function dates(m) {
+//   var days = m.days.InMonth();
+//   console.log(days);
+// }

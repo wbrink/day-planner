@@ -111,6 +111,43 @@ label {
   background-color: rgb(145, 138, 136);
 }
 
+/*************** calendar *********************/
+/* doing calendar */
+#calendar-head {
+  background-color: rgb(41, 166, 197);
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  padding: 10px 15px;
+  width: 380px;
+  box-sizing: border-box;
+}
+
+#calendar-body {
+  width: 380px;
+  background-color: white;
+  display: grid;
+  margin: auto;
+  text-align: center;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  margin-bottom: 20px;
+}
+
+/* first row on calendar mo, tu, we ... */
+.day-name {
+  background-color: lightgray;
+}
+
+.day {
+  border: 1px solid black;
+}
+
+/* .hide {
+  display: none !important;
+} */
+
+/**********   Media Queries *****************/
 /* smaller devices */
 @media (max-width: 850px) {
   html {
