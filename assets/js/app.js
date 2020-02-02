@@ -17,15 +17,22 @@ var hourArray = [
 
 // momentjs getting current day and hour
 var m = moment();
-m = m.subtract(5, "hours");
+//m = m.subtract(5, "hours");
 var hour = m.hour();
 
 // grab localstorage
+var todos = JSON.parse(localStorage.getItem("todos"));
 
-$(document).ready(function() {
+if (!todos) {
+  todos = {};
+}
+
+//console.log(todos);
+
+var commitments = $(document).ready(function() {
   var formattedDate = m.format("dddd, MMMM Do YYYY");
   lead.text(formattedDate);
-  console.log(m.hour());
+  //console.log(m.hour());
 
   for (var i = 0; i < hourArray.length; i++) {
     var row = $("<div>").addClass("row");
@@ -42,7 +49,7 @@ $(document).ready(function() {
       .text(hourArray[i]);
 
     // make editable div so the container is able to resize automattically if the user wants many rows
-    var editableDiv = $("<div>").attr({ contenteditable: "true", class: "event-text", "data-index": index });
+    var editableDiv = $("<div>").attr({ contenteditable: "true", class: "event-text", "data-hour": index });
     var saveDiv = $("<div>").attr("class", "save-container");
 
     saveDiv.append(
@@ -55,10 +62,19 @@ $(document).ready(function() {
     plannerForm.append(row);
   } //end loop
 
-  $(".save-button").on("click", saveToDo);
+  //after loading all elements place text in appropriate rows
+  for (var property in todos) {
+    $(`[data-hour=${property}]`).text(todos[property]);
+  }
 });
 
+// event handler that targets all .save-button elements even if dynamically created
+$(document).on("click", ".save-button", saveToDo);
+
 function saveToDo(event) {
-  var x = $(this).attr("data-index");
-  console.log(x);
+  var hour = $(this).attr("data-index");
+  var todo = $(`[data-hour=${hour}]`).text(); // gives me event-text that is supposed to be saved
+
+  todos[hour] = todo;
+  localStorage.setItem("todos", JSON.stringify(todos));
 }
