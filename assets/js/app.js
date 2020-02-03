@@ -16,10 +16,8 @@ var hourArray = [
 ];
 
 // momentjs getting current day and hour
-var m = moment(); // get current date
-
+var m = moment(); // gives current date
 var editableMoment = moment(); // copy that can be edited
-
 var hour = m.hour();
 
 // grab localstorage
@@ -34,11 +32,13 @@ var selCaledarDay;
 
 //console.log(todos);
 
-var commitments = $(document).ready(function() {
+$(document).ready(function() {
   var formattedDate = m.format("dddd, MMMM Do YYYY");
   lead.text(formattedDate);
   //console.log(m.hour());
-  setupCalendar(m, true); // pass in datetime
+  setupCalendar(m, true); // pass in datetime changes to start of month
+
+  m = moment(); // change it back to current day
 
   for (var i = 0; i < hourArray.length; i++) {
     var row = $("<div>").addClass("row");
@@ -69,27 +69,40 @@ var commitments = $(document).ready(function() {
   } //end loop
 
   //after loading all elements place text in appropriate rows
-  for (var property in todos) {
-    $(`[data-hour=${property}]`).text(todos[property]);
+  var dateString = m.format("MM-DD-YYYY");
+  if (Object.keys(todos).includes(dateString) && todos[dateString].length) {
+    for (var i = 0; i < todos[dateString].length; i++) {
+      $(`[data-hour=${todos[dateString][i].hour}]`).text(todos[dateString][i].note);
+    }
   }
 });
 
 //event handlers
 $(document).on("click", ".save-button", saveToDo); // targets all .save-button elements even if dynamically created
 $(".change-month").on("click", changeMonthClick); // targets change month clicks on calendar
+$(".day").on("click", daySelected);
 
+//
+// when save button is hit
 function saveToDo(event) {
-  var hour = $(this).attr("data-index");
-  var todo = $(`[data-hour=${hour}]`).text(); // gives me event-text that is supposed to be saved
+  var formattedDate = editableMoment.format("MM-DD-YYYY");
+  var hourSelected = $(this).attr("data-index");
+  var todo = $(`[data-hour=${hourSelected}]`).text(); // gives me event-text that is supposed to be saved
 
-  todos[hour] = todo;
+  if (!todos[formattedDate]) {
+    todos[formattedDate] = [];
+  }
+
+  todos[formattedDate].push({ hour: hourSelected, note: todo });
+  console.log(todos);
   localStorage.setItem("todos", JSON.stringify(todos));
 }
 
 // setsup the calendar on load
 // fromOnReady is boolean that tells whether function is called from document.onready function
 function setupCalendar(momentObject, fromOnReady) {
-  clearCalendar();
+  clearCalendar(); // removes the numbers for when day starts on different weekday
+
   // set the month and year for calendar
   $(".month-year").text(momentObject.format("MMMM YYYY"));
   var currentDay = momentObject.format("D");
@@ -97,7 +110,6 @@ function setupCalendar(momentObject, fromOnReady) {
   var startDayIndex = momentObject.startOf("month").format("d"); // gives the index of day su=0m monday=1...sat=6
   startDayIndex = parseInt(startDayIndex);
 
-  //console.log("currentday: " + currentDay);
   // place days of week in correct position on calendar
   for (var i = 1; i <= daysInMonth; i++) {
     $(`[data-day=${startDayIndex}]`).text(i);
@@ -113,9 +125,6 @@ function setupCalendar(momentObject, fromOnReady) {
 }
 
 function changeMonthClick() {
-  // remove selected day highlight
-  selCaledarDay.css("background-color", "white");
-
   var action = $(this).attr("data-value");
   if (action === "prev") {
     // subtract 1 from current month
@@ -125,10 +134,47 @@ function changeMonthClick() {
     editableMoment = editableMoment.add(1, "months");
     setupCalendar(editableMoment, false);
   }
+
+  // remove selected day highlight from other months but keep on current month
+  if (editableMoment.format("MMMM YYYY") != m.format("MMMM YYYY")) {
+    selCaledarDay.css("background-color", "white");
+  } else {
+    selCaledarDay.css("background-color", "rgb(41, 166, 197)");
+  }
 }
 
 function clearCalendar() {
   for (var i = 0; i < 35; i++) {
     $(`[data-day=${i}]`).text("");
+  }
+}
+
+// highlights day and sets editablemoment to day selected & loads any saved notes
+function daySelected(event) {
+  if ($(this).attr("data-day") && $(this).text()) {
+    // reset the selected day
+    selCaledarDay.css("background-color", "white");
+
+    // clear the rows text
+    $(".event-text").text("");
+
+    selCaledarDay = $(this);
+    selCaledarDay.css("background-color", "rgb(41, 166, 197)");
+    var day = parseInt($(this).text()); // gets day number
+
+    // set editableMoment to current day
+    editableMoment.startOf("month").add(day - 1, "days");
+
+    // change lead text to selected day
+    lead.text(editableMoment.format("dddd, MMMM Do YYYY"));
+
+    // call function to load any data
+    //after loading all elements place text in appropriate rows
+    var dateString = editableMoment.format("MM-DD-YYYY");
+    if (Object.keys(todos).includes(dateString) && todos[dateString].length) {
+      for (var i = 0; i < todos[dateString].length; i++) {
+        $(`[data-hour=${todos[dateString][i].hour}]`).text(todos[dateString][i].note);
+      }
+    }
   }
 }

@@ -33,8 +33,12 @@ h1 {
 .lead {
   text-align: center;
   font-size: 1.2rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.7rem;
   font-family: "Nanum Myeongjo", serif;
+}
+
+#calendar-icon {
+  margin-bottom: 10px;
 }
 
 .container {
@@ -119,12 +123,12 @@ label {
   justify-content: space-between;
   margin: auto;
   padding: 10px 15px;
-  width: 380px;
+  width: 300px;
   box-sizing: border-box;
 }
 
 #calendar-body {
-  width: 380px;
+  width: 300px;
   background-color: white;
   display: grid;
   margin: auto;
@@ -141,6 +145,7 @@ label {
 
 .day {
   border: 1px solid black;
+  cursor: pointer;
 }
 
 .change-month {
