@@ -118,12 +118,14 @@ label {
 /*************** calendar *********************/
 /* doing calendar */
 #calendar-head {
+  width: 300px;
   background-color: rgb(41, 166, 197);
+  /* display flex will work with jquery show and hide there is snapback issue */
   display: flex;
   justify-content: space-between;
   margin: auto;
   padding: 10px 15px;
-  width: 300px;
+
   box-sizing: border-box;
 }
 
@@ -150,6 +152,22 @@ label {
 
 .change-month {
   cursor: pointer;
+}
+
+#calendar-icon {
+  cursor: pointer;
+}
+
+.clear-calendar {
+  margin: auto;
+  padding: 10px;
+  text-align: center;
+  width: 200px;
+  background-color: #ff6961;
+  border-radius: 50px;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 20px;
 }
 
 /* .hide {

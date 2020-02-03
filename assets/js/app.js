@@ -1,5 +1,6 @@
 var plannerForm = $("#day-planner");
 var lead = $(".lead");
+var calendarButton = $("#calendar-icon");
 
 var hourArray = [
   "8:00AM",
@@ -19,6 +20,8 @@ var hourArray = [
 var m = moment(); // gives current date
 var editableMoment = moment(); // copy that can be edited
 var hour = m.hour();
+var calendarIsHidden;
+var dateKey = m.format("MM-DD-YYYY"); // current day by default, changed when day selected changes
 
 // grab localstorage
 var todos = JSON.parse(localStorage.getItem("todos"));
@@ -33,6 +36,11 @@ var selCaledarDay;
 //console.log(todos);
 
 $(document).ready(function() {
+  // hide the calendar
+  $("#calendar-head").hide();
+  $("#calendar-body").hide();
+  calendarIsHidden = true;
+
   var formattedDate = m.format("dddd, MMMM Do YYYY");
   lead.text(formattedDate);
   //console.log(m.hour());
@@ -81,6 +89,8 @@ $(document).ready(function() {
 $(document).on("click", ".save-button", saveToDo); // targets all .save-button elements even if dynamically created
 $(".change-month").on("click", changeMonthClick); // targets change month clicks on calendar
 $(".day").on("click", daySelected);
+calendarButton.on("click", showCalendar);
+$(".clear-calendar").on("click", clearTodayClick);
 
 //
 // when save button is hit
@@ -89,12 +99,21 @@ function saveToDo(event) {
   var hourSelected = $(this).attr("data-index");
   var todo = $(`[data-hour=${hourSelected}]`).text(); // gives me event-text that is supposed to be saved
 
+  // if entry for this date doesn't exist create one
   if (!todos[formattedDate]) {
     todos[formattedDate] = [];
   }
 
-  todos[formattedDate].push({ hour: hourSelected, note: todo });
-  console.log(todos);
+  var result = checkIfTimeExists(formattedDate, hourSelected); // false if not , index if it does
+  console.log(result);
+
+  // if it exists then overwrite
+  if (result >= 0) {
+    todos[formattedDate][result].note = todo;
+  } else {
+    todos[formattedDate].push({ hour: hourSelected, note: todo });
+  }
+
   localStorage.setItem("todos", JSON.stringify(todos));
 }
 
@@ -170,11 +189,46 @@ function daySelected(event) {
 
     // call function to load any data
     //after loading all elements place text in appropriate rows
-    var dateString = editableMoment.format("MM-DD-YYYY");
-    if (Object.keys(todos).includes(dateString) && todos[dateString].length) {
-      for (var i = 0; i < todos[dateString].length; i++) {
-        $(`[data-hour=${todos[dateString][i].hour}]`).text(todos[dateString][i].note);
+    dateKey = editableMoment.format("MM-DD-YYYY");
+    if (Object.keys(todos).includes(dateKey) && todos[dateKey].length) {
+      for (var i = 0; i < todos[dateKey].length; i++) {
+        $(`[data-hour=${todos[dateKey][i].hour}]`).text(todos[dateKey][i].note);
       }
     }
   }
+}
+
+function showCalendar(event) {
+  if (calendarIsHidden) {
+    $("#calendar-head").show(500);
+    $("#calendar-body").show(500);
+    calendarIsHidden = false;
+  } else {
+    $("#calendar-head").hide(500);
+    $("#calendar-body").hide(500);
+    calendarIsHidden = true;
+  }
+}
+
+function clearTodayClick() {
+  // remove text
+  $(".event-text").text("");
+
+  console.log(dateKey);
+  // remove
+  delete todos[dateKey];
+  localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+// checks if note for time exists
+// if exists return index where it at
+// if doesn't exist return false
+function checkIfTimeExists(date, hourSelected) {
+  for (var i = 0; i < todos[date].length; i++) {
+    if (todos[date][i].hour == hourSelected) {
+      return i;
+    }
+  }
+
+  return -1;
 }
