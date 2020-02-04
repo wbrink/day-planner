@@ -105,7 +105,7 @@ function saveToDo(event) {
   }
 
   var result = checkIfTimeExists(formattedDate, hourSelected); // false if not , index if it does
-  console.log(result);
+  //console.log(result);
 
   // if it exists then overwrite
   if (result >= 0) {
@@ -214,7 +214,7 @@ function clearTodayClick() {
   // remove text
   $(".event-text").text("");
 
-  console.log(dateKey);
+  //console.log(dateKey);
   // remove
   delete todos[dateKey];
   localStorage.setItem("todos", JSON.stringify(todos));
